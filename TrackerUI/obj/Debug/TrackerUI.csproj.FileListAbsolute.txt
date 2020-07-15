@@ -1,0 +1,1 @@
+C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.csprojAssemblyReference.cache
