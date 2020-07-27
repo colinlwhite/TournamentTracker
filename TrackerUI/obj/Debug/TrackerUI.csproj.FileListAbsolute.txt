@@ -8,3 +8,5 @@ C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.cspr
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.csproj.CoreCompileInputs.cache
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.exe
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.pdb
+C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.CreateTeamForm.resources
+C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.CreateTournamentForm.resources
