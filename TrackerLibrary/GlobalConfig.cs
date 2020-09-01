@@ -13,7 +13,7 @@ namespace TrackerLibrary
         /// But everyone can read it.
         /// A list because we might have multiple database to save and pull from
         /// </summary>
-        public static List<IDataConnection> Connections { get; private set; }
+        public static List<IDataConnection> Connections { get; private set; } = new List<IDataConnection>();
         /// <summary>
         /// 
         /// </summary>
@@ -24,12 +24,16 @@ namespace TrackerLibrary
             // Since the parameter type is a bool you don't have to do a comparison
             if (database)
             {
-                // TODO - Create the SQL Connection
+                // TODO - Set up the SQL Connector properly
+                SqlConnector sql = new SqlConnector();
+                Connections.Add(sql);
             }
             
             if (textFiles)
             {
                 // TODO - Create the Tect Connection
+                TextConnector text = new TextConnector();
+                Connections.Add(text);
             }
         }
     }
