@@ -23,10 +23,29 @@ namespace TrackerUI
         {
             if (ValidateForm())
             {
-                PrizeModel model = new PrizeModel();
+                PrizeModel model = new PrizeModel(
+                    placeNameValue.Text, 
+                    placeNumberValue.Text,
+                    prizeAmountValue.Text,
+                    prizePercentageValue.Text
+                    );
 
-                model.PlaceName = placeNameValue.Text;
-                model.PlaceNumber = placeNumberValue.Text;
+                foreach (IDataConnection db in GlobalConfig.Connections)
+                {
+                    db.CreatePrize(model);
+                }
+
+                placeNameValue.Text = "";
+                placeNumberValue.Text = "";
+                prizeAmountValue.Text = "0";
+                prizePercentageValue.Text = "0";
+
+                /*model.PlaceName = placeNameValue.Text;
+                model.PlaceNumber = placeNumberValue.Text;*/
+            }
+            else
+            {
+                MessageBox.Show("This form is invalid");
             }
         }
 
@@ -34,7 +53,7 @@ namespace TrackerUI
         {
             bool output = true;
             int placeNumber = 0;
-            bool placeNumberValidNumber = int.TryParse(placeNameValue.Text, out placeNumber);
+            bool placeNumberValidNumber = int.TryParse(placeNumberValue.Text, out placeNumber);
 
             if (!placeNumberValidNumber)
             {
@@ -52,10 +71,10 @@ namespace TrackerUI
             }
 
             decimal prizeAmount = 0;
-            int prizePercentage = 0;
+            double prizePercentage = 0;
 
             bool prizeAmountValid = decimal.TryParse(prizeAmountValue.Text, out prizeAmount);
-            bool prizePercentageValid = int.TryParse(prizePercentageValue.Text, out prizePercentage);
+            bool prizePercentageValid = double.TryParse(prizePercentageValue.Text, out prizePercentage);
 
             if (!prizeAmountValid || !prizePercentageValid)
             {
