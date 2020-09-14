@@ -15,3 +15,5 @@ C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.Tour
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\bin\Debug\TrackerLibrary.dll
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\bin\Debug\TrackerLibrary.pdb
 C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\obj\Debug\TrackerUI.csproj.CopyComplete
+C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\bin\Debug\Dapper.dll
+C:\Users\Colin\source\repos\TournamentTracker\TrackerUI\bin\Debug\Dapper.xml
