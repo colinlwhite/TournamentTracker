@@ -341,3 +341,4 @@ healthchecksdb
 
 .vs/
 bin
+obj
