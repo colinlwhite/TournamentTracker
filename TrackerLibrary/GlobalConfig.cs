@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrackerLibrary.DataAccess;
 
 namespace TrackerLibrary
 {
@@ -13,28 +15,35 @@ namespace TrackerLibrary
         /// But everyone can read it.
         /// A list because we might have multiple database to save and pull from
         /// </summary>
-        public static List<IDataConnection> Connections { get; private set; } = new List<IDataConnection>();
+        public static IDataConnection Connection { get; private set; }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="database"></param>
         /// <param name="textFiles"></param>
-        public static void InitializeConnections(bool database, bool textFiles)
+        public static void InitializeConnections(DatabaseType db)
         {
             // Since the parameter type is a bool you don't have to do a comparison
-            if (database)
+            if (db == DatabaseType.Sql)
             {
                 // TODO - Set up the SQL Connector properly
                 SqlConnector sql = new SqlConnector();
-                Connections.Add(sql);
+                Connection = sql;
             }
             
-            if (textFiles)
+            else if (db == DatabaseType.TextFile)
             {
                 // TODO - Create the Tect Connection
                 TextConnector text = new TextConnector();
-                Connections.Add(text);
+                Connection = text;
             }
+        }
+
+        public static string CnnString(string name)
+        {
+            // Going to App.Config to get me the connection string by looking
+            // up the name we gave it. It's going to return the ConnectionString attribute vALUE
+            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
         }
     }
 }
