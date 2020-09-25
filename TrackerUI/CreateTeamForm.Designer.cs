@@ -148,6 +148,7 @@
             this.createMemberButton.TabIndex = 34;
             this.createMemberButton.Text = "Create Member";
             this.createMemberButton.UseVisualStyleBackColor = true;
+            this.createMemberButton.Click += new System.EventHandler(this.createMemberButton_Click);
             // 
             // cellPhoneValue
             // 
@@ -266,7 +267,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(24F, 59F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(2118, 1559);
+            this.ClientSize = new System.Drawing.Size(2067, 1506);
             this.Controls.Add(this.createTeamButton);
             this.Controls.Add(this.deleteSelectedMemberButton);
             this.Controls.Add(this.teamMembersListBox);
