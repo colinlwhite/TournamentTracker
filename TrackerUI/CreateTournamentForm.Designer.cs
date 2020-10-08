@@ -211,11 +211,11 @@
             this.prizesLabel.AutoSize = true;
             this.prizesLabel.Font = new System.Drawing.Font("Segoe UI", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prizesLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            this.prizesLabel.Location = new System.Drawing.Point(866, 667);
+            this.prizesLabel.Location = new System.Drawing.Point(877, 653);
             this.prizesLabel.Name = "prizesLabel";
-            this.prizesLabel.Size = new System.Drawing.Size(391, 71);
+            this.prizesLabel.Size = new System.Drawing.Size(165, 71);
             this.prizesLabel.TabIndex = 36;
-            this.prizesLabel.Text = "Teams / Players";
+            this.prizesLabel.Text = "Prizes";
             // 
             // prizesListBox
             // 
