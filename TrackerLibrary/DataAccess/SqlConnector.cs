@@ -115,6 +115,15 @@ namespace TrackerLibrary.DataAccess
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
                 output = connection.Query<TeamModel>("dbo.spTeam_GetAll").ToList();
+
+                foreach (TeamModel team in output)
+                {
+                    var tm = new DynamicParameters();
+                    tm.Add("@TeamId", team.Id);
+
+                    team.TeamMembers = connection.Query<PersonModel>("spTeamMembers_GetByTeam", tm, commandType: CommandType.StoredProcedure).ToList();
+
+                }
             }
 
             return output;
