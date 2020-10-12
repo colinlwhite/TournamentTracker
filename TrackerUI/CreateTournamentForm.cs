@@ -21,19 +21,45 @@ namespace TrackerUI
         {
             InitializeComponent();
 
-            WireUpForms();
+            WireUpLists();
         }
 
-        private void WireUpForms()
+        private void WireUpLists()
         {
+            selectTeamDropDown.DataSource = null;
             selectTeamDropDown.DataSource = availableTeams;
             selectTeamDropDown.DisplayMember = "TeamName";
 
+            tournamentTeamsListBox.DataSource = null;
             tournamentTeamsListBox.DataSource = selectedTeams;
             tournamentTeamsListBox.DisplayMember = "TeamName";
 
+            prizesListBox.DataSource = null;
             prizesListBox.DataSource = selectedPrizes;
             prizesListBox.DisplayMember = "PlaceName";
+        }
+
+        private void addTeamButton_Click(object sender, EventArgs e)
+        {
+            /*            PersonModel p = (PersonModel)selectTeamMemberDropDown.SelectedItem;
+
+                        if (p != null)
+                        {
+                            availableTeamMembers.Remove(p);
+                            selectedTeamMembers.Add(p);
+
+                            WireUpLists();
+                        }*/
+
+            TeamModel t = (TeamModel)selectTeamDropDown.SelectedItem;
+
+            if (t != null)
+            {
+                availableTeams.Remove(t);
+                selectedTeams.Add(t);
+
+                WireUpLists();
+            }
         }
     }
 }
