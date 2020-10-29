@@ -16,9 +16,17 @@ namespace TrackerUI
     public partial class CreatePrizeForm : Form
     {
         // TODO - Alert the user that they did something wrong within each if else statement
-        public CreatePrizeForm()
+        IPrizeRequester callingForm;
+        public CreatePrizeForm(IPrizeRequester caller)
         {
             InitializeComponent();
+            // Storing whatever is passed into the constructor
+            callingForm = caller;
+        }
+
+        public void PrizeComplete(PrizeModel model)
+        {
+            throw new NotImplementedException();
         }
 
         private void createPrizeButton_Click(object sender, EventArgs e)
@@ -34,10 +42,10 @@ namespace TrackerUI
 
                 GlobalConfig.Connection.CreatePrize(model);
 
-                placeNameValue.Text = "";
-                placeNumberValue.Text = "";
-                prizeAmountValue.Text = "0";
-                prizePercentageValue.Text = "0";
+                // Sending the model back
+                callingForm.PrizeComplete(model);
+
+                this.Close();
 
                 /*model.PlaceName = placeNameValue.Text;
                 model.PlaceNumber = placeNumberValue.Text;*/
