@@ -12,7 +12,7 @@ using TrackerLibrary.Models;
 
 namespace TrackerUI
 {
-    public partial class CreateTournamentForm : Form, IPrizeRequestor
+    public partial class CreateTournamentForm : Form, IPrizeRequester, ITeamRequester
     {
         List<TeamModel> availableTeams = GlobalConfig.Connection.GetTeam_All();
         List<TeamModel> selectedTeams = new List<TeamModel>();
@@ -54,14 +54,34 @@ namespace TrackerUI
 
         private void createPrizeButton_Click(object sender, EventArgs e)
         {
+            // Calling the CreatePrizeForm to open it
+            // We need to pass in IPrizeRequester for the constructor in CreatePrizeForm
+            // "this" represents this specific instance
             CreatePrizeForm form = new CreatePrizeForm(this);
             form.Show();
         }
 
+        // Implementing this interface because we inherited IPrizeRequester Interface
         public void PrizeComplete(PrizeModel model)
         {
+            // Get the PrizeModel back from the CreatePrizeForm window to the Tournament Form Window
+            // Aforementioned is being done because the method is in CreatePrizeForm
+
+            // Take the PrizeModel and add it to the list of "selected prizes"
             selectedPrizes.Add(model);
             WireUpLists();
+        }
+
+        public void TeamComplete(TeamModel model)
+        {
+            selectedTeams.Add(model);
+            WireUpLists();
+        }
+
+        private void createNewTeamLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CreateTeamForm form = new CreateTeamForm(this);
+            form.Show();
         }
     }
 }

@@ -16,11 +16,11 @@ namespace TrackerUI
     public partial class CreatePrizeForm : Form
     {
         // TODO - Alert the user that they did something wrong within each if else statement
-        IPrizeRequestor callingForm;
-        public CreatePrizeForm(IPrizeRequestor caller)
+        IPrizeRequester callingForm;
+        public CreatePrizeForm(IPrizeRequester caller)
         {
             InitializeComponent();
-
+            // Storing whatever is passed into the constructor
             callingForm = caller;
         }
 
@@ -42,6 +42,7 @@ namespace TrackerUI
 
                 GlobalConfig.Connection.CreatePrize(model);
 
+                // Sending the model back
                 callingForm.PrizeComplete(model);
 
                 this.Close();
