@@ -130,6 +130,7 @@ namespace TrackerUI
             tm.EnteredTeams = selectedTeams;
 
             // Next we need to save the tournament model or data to a SQL database!
+            GlobalConfig.Connection.CreateTournament(tm);
 
 
         }
