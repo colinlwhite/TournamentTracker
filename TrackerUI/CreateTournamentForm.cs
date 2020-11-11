@@ -129,7 +129,7 @@ namespace TrackerUI
             tm.Prizes = selectedPrizes;
             tm.EnteredTeams = selectedTeams;
 
-            // Wire up the matchups
+            // TODO - Wire up the matchups
 
 
             // Next we need to save the tournament model or data to a SQL database!
