@@ -129,7 +129,19 @@ namespace TrackerUI
             tm.Prizes = selectedPrizes;
             tm.EnteredTeams = selectedTeams;
 
-            // TODO - Wire up the matchups
+            // Wire up the matchups
+            TournamentLogic.CreateRounds(tm);
+
+            // 1. To create an initial Round, randomize all teams
+
+            // 2. Check if we have enough teams to have an even, 2 teams each, bracket
+            // 2, 4, 8, 16, 32.
+            // If the we don't have (2, 4, 8, 16 or 32) teams, add in a byeweek or byeteam
+            // 14 teams we'll need an additional 2 bye weeks
+            // We have the correct number of teams if 2, to the N works
+
+            // 3. Create a 1st round of matchups since it's already from a randomized list of even teams. We already have the information
+            // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
 
 
             // Next we need to save the tournament model or data to a SQL database!
