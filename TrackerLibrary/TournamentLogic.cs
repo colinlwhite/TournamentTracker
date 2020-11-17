@@ -39,19 +39,40 @@ namespace TrackerLibrary
         }
 
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
-        private static void CreateOtherRounds(TournamentModel model, int rounds)
+        private static void CreateOtherRounds(TournamentModel model, int totalTournamentRounds)
         {
             // First round was created in its own method
-            int currentRound = 2;
+            int currentRoundCounter = 2;
+
             // We have to know the previous round to move forward
             List<MatchupModel> previousRound = model.Rounds[0];
 
-            while (currentRound <= rounds)
+            // 
+            List<MatchupModel> currentRound = new List<MatchupModel>();
+            MatchupModel currentMatchup = new MatchupModel();
+
+            // While we have more rounds in this tournament to go
+            while (currentRoundCounter <= totalTournamentRounds)
             {
+                // 
                 foreach (MatchupModel match in previousRound)
                 {
-
+                    // Assigning parent matchup from the previous round
+                    currentMatchup.Entries.Add(new MatchupEntryModel { ParentMatchup = match });
+                    // 
+                    if (currentMatchup.Entries.Count > 1)
+                    {
+                        currentMatchup.MatchupRound = currentRoundCounter;
+                        currentRound.Add(currentMatchup);
+                        // clearing out the model now that it has been added
+                        currentMatchup = new MatchupModel();
+                    }
                 }
+
+                model.Rounds.Add(currentRound);
+                previousRound = currentRound;
+                currentRound = new List<MatchupModel>();
+                currentRoundCounter += 1;
             }
 
         }
