@@ -152,11 +152,30 @@ namespace TrackerLibrary.DataAccess
                 // Because each Round is comprised of a List<MatchupModel>
                 foreach (MatchupModel matchup in round)
                 {
-                    // save the matchups via the Dapper pattern
+                    // save the matchups via the Dapper pattern and using the stored procedure
+                    var p = new DynamicParameters();
+                    p.Add("@TournamentId", model.Id);
+                    p.Add("@MatchupRound", matchup.MatchupRound);
+                    p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                    connection.Execute("dbo.spMatchups_Insert", p, commandType: CommandType.StoredProcedure);
+
+                    matchup.Id = p.Get<int>("@id");
+
+                    // Looping through each entry to save them
+                    foreach (MatchupEntryModel matchupEntry in matchup.Entries)
+                    {
+                        p = new DynamicParameters();
+                        p.Add("@MatchupId", matchup.Id);
+                        p.Add("@ParentId", matchupEntry.ParentMatchup);
+                        p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
+                        p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        connection.Execute("dbo.spMatchupEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                    }
 
                 }
             }
-            // Loop through the entries and save them
         }
 
         public List<PersonModel> GetPerson_All()
