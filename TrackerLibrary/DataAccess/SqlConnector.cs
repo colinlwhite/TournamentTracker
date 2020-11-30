@@ -111,7 +111,7 @@ namespace TrackerLibrary.DataAccess
         {
             var p = new DynamicParameters();
             p.Add("@TournamentName", model.TournamentName);
-            p.Add("@TeamName", model.EntryFee);
+            p.Add("@EntryFee", model.EntryFee);
             p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             connection.Execute("dbo.spTournaments_Insert", p, commandType: CommandType.StoredProcedure);
@@ -127,7 +127,7 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@PrizeId", pz.Id);
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.TournamentPrizes_Insert", p, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spTournamentPrizes_Insert", p, commandType: CommandType.StoredProcedure);
             }
         }
         private void SaveTournamentEntries(TournamentModel model, IDbConnection connection)
@@ -139,7 +139,7 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@TeamId", tm.Id);
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.TournamentEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spTournamentEntries_Insert", p, commandType: CommandType.StoredProcedure);
 
             }
         }
@@ -167,8 +167,25 @@ namespace TrackerLibrary.DataAccess
                     {
                         p = new DynamicParameters();
                         p.Add("@MatchupId", matchup.Id);
-                        p.Add("@ParentId", matchupEntry.ParentMatchup);
-                        p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
+                        if (matchupEntry.ParentMatchup == null)
+                        {
+                            p.Add("@ParentMatchupId", null);
+                        }
+                        else
+                        {
+                            p.Add("@ParentMatchupId", matchupEntry.ParentMatchup.Id );
+                        }
+                        // p.Add("@ParentMatchupId", matchupEntry.ParentMatchup);
+                        // check for null value
+                        if (matchupEntry.TeamCompeting == null)
+                        {
+                            p.Add("@TeamCompetingId", null);
+                        } 
+                        else
+                        {
+                            p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
+                        }
+                        // p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
                         p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                         connection.Execute("dbo.spMatchupEntries_Insert", p, commandType: CommandType.StoredProcedure);
