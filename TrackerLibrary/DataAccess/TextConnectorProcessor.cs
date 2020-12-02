@@ -214,6 +214,27 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 }
             }
         }
+        // Going to change this signature to MatchupModel
+        public static List<MatchupModel> ConvertToMatchupModels(this List<string> lines)
+        {
+            List<MatchupModel> output = new List<MatchupModel>();
+
+            foreach (string line in lines)
+            {
+                string[] columns = line.Split(',');
+
+                MatchupModel p = new MatchupModel();
+                p.Id = int.Parse(columns[0]);
+                p.PlaceNumber = int.Parse(columns[1]);
+                p.PlaceName = columns[2];
+                p.PrizeAmount = decimal.Parse(columns[3]);
+                p.PrizePercentage = double.Parse(columns[4]);
+                output.Add(p);
+            }
+
+            return output;
+
+        }
 
         public static void SaveMatchupToFile(this MatchupModel matchup, string matchupFile, string matchupEntryFile)
         {
