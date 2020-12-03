@@ -214,7 +214,27 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 }
             }
         }
-        // Going to change this signature to MatchupModel
+
+        private static List<MatchupEntryModel> ConvertStringToMatchupEntryModels(string input)
+        {
+            string[] ids = input.Split('|');
+            List<MatchupEntryModel> output = new List<MatchupEntryModel>();
+            List<MatchupEntryModel> entries = GlobalConfig.MatchupEntryFile.FullFilePath().LoadFile().ConvertToMatchupEntryModels();
+
+            foreach (string id in ids)
+            {
+                output.Add(entries.Where(x => x.Id == int.Parse(id)).First());
+            }
+
+            return output;
+        }
+
+        private static TeamModel LookTeamById(int id)
+        {
+            List<TeamModel> teams = GlobalConfig.TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(GlobalConfig.PeopleFile);
+
+            return teams.Where(x => x.Id == id).First();
+        }
         public static List<MatchupModel> ConvertToMatchupModels(this List<string> lines)
         {
             List<MatchupModel> output = new List<MatchupModel>();
@@ -225,10 +245,9 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
                 MatchupModel p = new MatchupModel();
                 p.Id = int.Parse(columns[0]);
-                p.PlaceNumber = int.Parse(columns[1]);
-                p.PlaceName = columns[2];
-                p.PrizeAmount = decimal.Parse(columns[3]);
-                p.PrizePercentage = double.Parse(columns[4]);
+                p.Entries = ConvertStringToMatchupEntryModels(columns[1]);
+                p.Winner = LookTeamById(int.Parse(columns[2]));
+                p.MatchupRound = int.Parse(columns[3]);
                 output.Add(p);
             }
 
