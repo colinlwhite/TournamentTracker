@@ -310,6 +310,20 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             {
                 entry.SaveEntryToFile(matchupEntryFile);
             }
+
+            List<string> lines = new List<string>();
+
+            foreach (MatchupModel m in matchups)
+            {
+                string winnerId = "";
+                if (m.Winner != null)
+                {
+                    winnerId = m.Winner.Id.ToString();
+                }
+                lines.Add($"{ m.Id },{ ConvertMatchupEntryListToString(m.Entries) },{ winnerId },{ m.MatchupRound }");
+            }
+
+            File.WriteAllLines(GlobalConfig.MatchupFile.FullFilePath(), lines);
         }
 
         public static void SaveEntryToFile(this MatchupEntryModel entry, string matchupEntryFile)
@@ -436,6 +450,26 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             foreach (TeamModel t in teams)
             {
                 output += $"{t.Id}|";
+            }
+
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+
+        private static string ConvertMatchupEntryListToString(List<MatchupEntryModel> entries)
+        {
+            string output = "";
+
+            int count = entries.Count;
+            if (count == 0)
+            {
+                return "";
+            }
+
+            foreach (MatchupEntryModel e in entries)
+            {
+                output += $"{e.Id}|";
             }
 
             output = output.Substring(0, output.Length - 1);
