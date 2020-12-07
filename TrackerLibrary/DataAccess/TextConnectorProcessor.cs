@@ -152,8 +152,6 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                     tm.Prizes.Add(prizes.Where(x => x.Id == int.Parse(id)).First());
                 }
 
-                output.Add(tm);
-
                 // Capturing the Rounds Information
                 string[] rounds = cols[5].Split('|');
 
@@ -169,6 +167,8 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
                     tm.Rounds.Add(matchupModel);
                 }
+
+                output.Add(tm);
             }
 
             return output;
@@ -236,7 +236,8 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             foreach (string line in lines)
             {
-                string[] columns = line.Split( ',' );
+                string[] columns = line.Split(',');
+
                 MatchupEntryModel m = new MatchupEntryModel();
                 m.Id = int.Parse(columns[0]);
                 if (columns[1].Length == 0)
@@ -262,7 +263,6 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             }
 
             return output;
-
         }
 
         private static List<MatchupEntryModel> ConvertStringToMatchupEntryModels(string input)
@@ -329,10 +329,10 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             matchup.Id = currentId;
 
-            matchups.Add(matchup);
+            // matchups.Add(matchup);
 
             // Saving Matchups To File
-            List<string> lines = new List<string>();
+/*            List<string> lines = new List<string>();
 
             foreach (MatchupModel m in matchups)
             {
@@ -344,7 +344,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 lines.Add($"{ m.Id },{ "" },{ winnerId },{ m.MatchupRound }");
             }
 
-            File.WriteAllLines(GlobalConfig.MatchupFile.FullFilePath(), lines);
+            File.WriteAllLines(GlobalConfig.MatchupFile.FullFilePath(), lines);*/
 
             foreach (MatchupEntryModel entry in matchup.Entries)
             {
@@ -352,7 +352,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             }
 
             // Saving Matchups To File
-            lines = new List<string>();
+            List<string> lines = new List<string>();
 
             foreach (MatchupModel m in matchups)
             {
