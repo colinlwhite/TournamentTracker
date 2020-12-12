@@ -103,6 +103,7 @@ namespace TrackerLibrary.DataAccess
                 SaveTournament(model, connection);
                 SaveTournamentPrizes(model, connection);
                 SaveTournamentEntries(model, connection);
+                SaveTournamentRounds(model, connection);
             }
         }
 
@@ -110,7 +111,7 @@ namespace TrackerLibrary.DataAccess
         {
             var p = new DynamicParameters();
             p.Add("@TournamentName", model.TournamentName);
-            p.Add("@TeamName", model.EntryFee);
+            p.Add("@EntryFee", model.EntryFee);
             p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             connection.Execute("dbo.spTournaments_Insert", p, commandType: CommandType.StoredProcedure);
@@ -126,7 +127,7 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@PrizeId", pz.Id);
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.TournamentPrizes_Insert", p, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spTournamentPrizes_Insert", p, commandType: CommandType.StoredProcedure);
             }
         }
         private void SaveTournamentEntries(TournamentModel model, IDbConnection connection)
@@ -138,8 +139,59 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@TeamId", tm.Id);
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.TournamentEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spTournamentEntries_Insert", p, commandType: CommandType.StoredProcedure);
 
+            }
+        }
+        private void SaveTournamentRounds(TournamentModel model, IDbConnection connection)
+        {
+            // Loop through the Rounds
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                // Loop through the matchups
+                // Because each Round is comprised of a List<MatchupModel>
+                foreach (MatchupModel matchup in round)
+                {
+                    // save the matchups via the Dapper pattern and using the stored procedure
+                    var p = new DynamicParameters();
+                    p.Add("@TournamentId", model.Id);
+                    p.Add("@MatchupRound", matchup.MatchupRound);
+                    p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                    connection.Execute("dbo.spMatchups_Insert", p, commandType: CommandType.StoredProcedure);
+
+                    matchup.Id = p.Get<int>("@id");
+
+                    // Looping through each entry to save them
+                    foreach (MatchupEntryModel matchupEntry in matchup.Entries)
+                    {
+                        p = new DynamicParameters();
+                        p.Add("@MatchupId", matchup.Id);
+                        if (matchupEntry.ParentMatchup == null)
+                        {
+                            p.Add("@ParentMatchupId", null);
+                        }
+                        else
+                        {
+                            p.Add("@ParentMatchupId", matchupEntry.ParentMatchup.Id );
+                        }
+                        // p.Add("@ParentMatchupId", matchupEntry.ParentMatchup);
+                        // check for null value
+                        if (matchupEntry.TeamCompeting == null)
+                        {
+                            p.Add("@TeamCompetingId", null);
+                        } 
+                        else
+                        {
+                            p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
+                        }
+                        // p.Add("@TeamCompetingId", matchupEntry.TeamCompeting.Id);
+                        p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        connection.Execute("dbo.spMatchupEntries_Insert", p, commandType: CommandType.StoredProcedure);
+                    }
+
+                }
             }
         }
 
