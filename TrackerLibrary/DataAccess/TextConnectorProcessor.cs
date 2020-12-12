@@ -151,14 +151,23 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
                 foreach (string id in teamIds)
                 {
-                    tm.EnteredTeams.Add(teams.Where(x => x.Id == int.Parse(id)).First());
+                    tm.EnteredTeams.Add(teams.Where(x => x.Id == int.Parse(id)).FirstOrDefault());
                 }
 
                 string[] prizeIds = cols[4].Split('|');
 
                 foreach (string id in prizeIds)
                 {
-                    tm.Prizes.Add(prizes.Where(x => x.Id == int.Parse(id)).First());
+                    int prizeId = 0;
+                    if (int.TryParse(id, out prizeId))
+                    {
+                        tm.Prizes.Add(prizes.Where(x => x.Id == prizeId).FirstOrDefault());
+                    } 
+                    else
+                    {
+                        tm.Prizes = null;
+                    }
+                    // tm.Prizes.Add(prizes.Where(x => x.Id == int.Parse(id)).FirstOrDefault());
                 }
 
                 // Capturing the Rounds Information
@@ -531,7 +540,15 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             foreach (TeamModel t in teams)
             {
-                output += $"{t.Id}|";
+                if (t != null)
+                {
+                    output += $"{t.Id}|";
+                } 
+                else
+                {
+                    output += $"";
+                }
+                // output += $"{t.Id}|";
             }
 
             output = output.Substring(0, output.Length - 1);
@@ -562,6 +579,11 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         private static string ConvertPrizeListToString(List<PrizeModel> prizes)
         {
             string output = "";
+
+            if (prizes == null)
+            {
+                return "";
+            }
 
             if (prizes.Count == 0)
             {

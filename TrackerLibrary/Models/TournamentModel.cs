@@ -29,7 +29,7 @@ namespace TrackerLibrary.Models
         /// <summary>
         /// The set of teams that have been entered.
         /// </summary>
-        public List<TeamModel> EnteredTeams { get; set; }
+        public List<TeamModel> EnteredTeams { get; set; } = new List<TeamModel>();
         /// <summary>
         /// The list of prizes for the various places.
         /// </summary>
