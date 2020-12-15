@@ -22,6 +22,8 @@ namespace TrackerUI
             tournament = tournametModel;
 
             LoadFormData();
+
+            LoadRounds();
         }
 
         /// <summary>
@@ -31,14 +33,23 @@ namespace TrackerUI
         {
             // Populating the Tournament Name Example:
             tournamentName.Text = tournament.TournamentName;
+        }
 
+        private void WireUpLists()
+        {
+            roundDropDown.DataSource = null;
+            roundDropDown.DataSource = rounds;
         }
 
         private void LoadRounds()
         {
+            // We're initilizing the rounds everytime because if we don't refresh the list we could have duplicate rounds
+            rounds = new List<int>();
+
             // We'll always have one round minimum
             rounds.Add(1);
             int currentRound = 1;
+
             foreach (List<MatchupModel> matchups in tournament.Rounds)
             {
                 if (matchups.First().MatchupRound > currentRound)
@@ -47,6 +58,8 @@ namespace TrackerUI
                     rounds.Add(currentRound);
                 }
             }
+
+            WireUpLists();
         }
     }
 }
