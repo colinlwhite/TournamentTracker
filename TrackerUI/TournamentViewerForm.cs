@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrackerLibrary;
 using TrackerLibrary.Models;
 
 namespace TrackerUI
@@ -227,6 +228,29 @@ namespace TrackerUI
             {
                 MessageBox.Show("Sorry, but we don't handle tied games");
             }
+
+            foreach (List<MatchupModel> round in tournament.Rounds)
+            {
+                foreach (MatchupModel roundMatchup in round)
+                {
+                    foreach (MatchupEntryModel me in roundMatchup.Entries)
+                    {
+                        if (me.ParentMatchup != null)
+                        {
+                            if (me.ParentMatchup.Id == m.Id)
+                            {
+                                me.TeamCompeting = m.Winner;
+                                GlobalConfig.Connection.UpdateMatchup(roundMatchup);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            LoadMatchups((int)roundDropDown.SelectedItem);
+
+            GlobalConfig.Connection.UpdateMatchup(m);
         }
     }
 }
