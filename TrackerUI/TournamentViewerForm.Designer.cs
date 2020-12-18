@@ -59,6 +59,7 @@
             this.scoreButton.TabIndex = 27;
             this.scoreButton.Text = "Score";
             this.scoreButton.UseVisualStyleBackColor = true;
+            this.scoreButton.Click += new System.EventHandler(this.scoreButton_Click);
             // 
             // versusLabel
             // 
@@ -152,6 +153,7 @@
             this.unplayedOnlyCheckbox.TabIndex = 18;
             this.unplayedOnlyCheckbox.Text = "Unplayed Only";
             this.unplayedOnlyCheckbox.UseVisualStyleBackColor = true;
+            this.unplayedOnlyCheckbox.CheckedChanged += new System.EventHandler(this.unplayedOnlyCheckbox_CheckedChanged);
             // 
             // roundDropDown
             // 
