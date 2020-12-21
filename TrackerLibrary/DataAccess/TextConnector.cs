@@ -62,7 +62,6 @@ namespace TrackerLibrary.DataAccess
         {
             List<TeamModel> teams = GlobalConfig.TeamFile.FullFilePath().LoadFile().ConvertToTeamModels();
 
-            // Find the max ID using LINQ
             int currentId = 1;
 
             if (teams.Count > 0)
@@ -100,7 +99,6 @@ namespace TrackerLibrary.DataAccess
 
             tournaments.SaveToTournamentFile();
 
-            // return model;
         }
         public List<TournamentModel> GetTournament_All()
         {

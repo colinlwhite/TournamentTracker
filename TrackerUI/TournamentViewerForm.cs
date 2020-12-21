@@ -248,6 +248,8 @@ namespace TrackerUI
                 }
             }
 
+            TournamentLogic.UpdateTournamentResults(tournament);
+
             LoadMatchups((int)roundDropDown.SelectedItem);
 
             GlobalConfig.Connection.UpdateMatchup(m);

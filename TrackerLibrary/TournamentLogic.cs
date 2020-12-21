@@ -38,6 +38,54 @@ namespace TrackerLibrary
 
         }
 
+        public static void UpdateTournamentResults(TournamentModel model)
+        {
+            List<MatchupModel> toScore = new List<MatchupModel>();
+
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                foreach (MatchupModel rm in round)
+                {
+                    if (rm.Entries.Any(x => x.Score != 0 || rm.Entries.Count == 1))
+                    {
+                        toScore.Add(rm);
+                    }
+                }
+            }
+
+/*            if (teamOneScore > teamTwoScore)
+            {
+                m.Winner = m.Entries[0].TeamCompeting;
+            }
+            else if (teamOneScore < teamTwoScore)
+            {
+                m.Winner = m.Entries[1].TeamCompeting;
+            }
+            else
+            {
+                MessageBox.Show("Sorry, but we don't handle tied games");
+            }*/
+/*
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                foreach (MatchupModel roundMatchup in round)
+                {
+                    foreach (MatchupEntryModel me in roundMatchup.Entries)
+                    {
+                        if (me.ParentMatchup != null)
+                        {
+                            if (me.ParentMatchup.Id == m.Id)
+                            {
+                                me.TeamCompeting = m.Winner;
+                                GlobalConfig.Connection.UpdateMatchup(roundMatchup);
+                            }
+                        }
+
+                    }
+                }
+            }*/
+        }
+
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
         private static void CreateOtherRounds(TournamentModel model, int totalTournamentRounds)
         {
