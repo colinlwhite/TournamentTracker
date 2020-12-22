@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,13 +46,16 @@ namespace TrackerLibrary
             foreach (List<MatchupModel> round in model.Rounds)
             {
                 foreach (MatchupModel rm in round)
-                {
-                    if (rm.Entries.Any(x => x.Score != 0 || rm.Entries.Count == 1))
+                {   // If a game winner has been decided we don't need to worry about this
+                    // If a game winner has not been decided and either
+                    // A team has a score or there's only one team in the game
+                    if (rm.Winner == null && (rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
                     {
+                        // Add that team to a list of teams to be scored
                         toScore.Add(rm);
                     }
                 }
-            }
+            }ScoreMatchups(toScore);
 
 /*            if (teamOneScore > teamTwoScore)
             {
@@ -84,6 +88,25 @@ namespace TrackerLibrary
                     }
                 }
             }*/
+        }
+
+        private static void ScoreMatchups(List<MatchupModel> model)
+        {
+            string scoreDirection = ConfigurationManager.AppSettings["winnerDetermination"];
+
+/*            if (teamOneScore > teamTwoScore)
+            {
+                m.Winner = m.Entries[0].TeamCompeting;
+            }
+            else if (teamOneScore < teamTwoScore)
+            {
+                m.Winner = m.Entries[1].TeamCompeting;
+            }
+            else
+            {
+                MessageBox.Show("Sorry, but we don't handle tied games");
+            }*/
+/*
         }
 
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
