@@ -194,8 +194,6 @@ namespace TrackerLibrary
 
             return rounds;
         }
-
-        // 1. To create an initial Round, randomize all teams
         private static List<TeamModel> randomizeTeamOrder(List<TeamModel> teams)
         {
             return teams.OrderBy(x => Guid.NewGuid()).ToList();
