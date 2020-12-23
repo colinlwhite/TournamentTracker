@@ -92,7 +92,24 @@ namespace TrackerLibrary
 
         private static void ScoreMatchups(List<MatchupModel> model)
         {
-            string scoreDirection = ConfigurationManager.AppSettings["winnerDetermination"];
+            //
+            string greaterWins = ConfigurationManager.AppSettings["greaterWins"];
+
+            foreach (MatchupModel m in model)
+            {
+                // 0 means false or low score wins, we're playing Golf
+                if (greaterWins == "0")
+                {
+                    if (m.Entries[0].Score < m.Entries[1].Score)
+                    {
+                        m.Winner = m.Entries[0].TeamCompeting;
+                    }
+                }
+                else
+                {
+                    // true or high score wins like a normal game
+                } 
+            }
 
 /*            if (teamOneScore > teamTwoScore)
             {
