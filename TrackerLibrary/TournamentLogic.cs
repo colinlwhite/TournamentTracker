@@ -123,7 +123,7 @@ namespace TrackerLibrary
             {
                 MessageBox.Show("Sorry, but we don't handle tied games");
             }*/
-/*
+
         }
 
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
