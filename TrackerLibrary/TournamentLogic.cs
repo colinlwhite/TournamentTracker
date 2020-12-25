@@ -90,13 +90,19 @@ namespace TrackerLibrary
             }*/
         }
 
-        private static void ScoreMatchups(List<MatchupModel> model)
+        private static void ScoreMatchups(List<MatchupModel> models)
         {
-            //
+            // Greater or Lesser
             string greaterWins = ConfigurationManager.AppSettings["greaterWins"];
 
-            foreach (MatchupModel m in model)
+            foreach (MatchupModel m in models)
             {
+                // Checking for Bye Week Entry
+                if (m.Entries.Count == 1)
+                {
+                    m.Winner = m.Entries[0].TeamCompeting;
+                    continue;
+                }
                 // 0 means false or low score wins, we're playing Golf
                 if (greaterWins == "0")
                 {
