@@ -110,26 +110,20 @@ namespace TrackerLibrary
                     {
                         m.Winner = m.Entries[0].TeamCompeting;
                     }
+                    else if (m.Entries[1].Score < m.Entries[0].Score)
+                    {
+                        m.Winner = m.Entries[1].TeamCompeting;
+                    }
+                    else
+                    {
+                        throw new Exception("We do not allow ties in this application.");
+                    }
                 }
                 else
                 {
                     // true or high score wins like a normal game
                 } 
             }
-
-/*            if (teamOneScore > teamTwoScore)
-            {
-                m.Winner = m.Entries[0].TeamCompeting;
-            }
-            else if (teamOneScore < teamTwoScore)
-            {
-                m.Winner = m.Entries[1].TeamCompeting;
-            }
-            else
-            {
-                MessageBox.Show("Sorry, but we don't handle tied games");
-            }*/
-
         }
 
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
