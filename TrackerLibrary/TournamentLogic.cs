@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +36,109 @@ namespace TrackerLibrary
             model.Rounds.Add(CreateFirstRound(tournamentByeWeeks, randomizedTeams));
 
             CreateOtherRounds(model, tournamentRounds);
+        }
 
+        public static void UpdateTournamentResults(TournamentModel model)
+        {
+            List<MatchupModel> toScore = new List<MatchupModel>();
+
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                foreach (MatchupModel rm in round)
+                {   // If a game winner has been decided we don't need to worry about this
+                    // If a game winner has not been decided and either
+                    // A team has a score or there's only one team in the game
+                    if (rm.Winner == null && (rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
+                    {
+                        // Add that team to a list of teams to be scored
+                        toScore.Add(rm);
+                    }
+                }
+            }
+            
+            MarkWinnerInMatchups(toScore);
+
+            AdvanceWinners(toScore, model);
+
+            toScore.ForEach(x => GlobalConfig.Connection.UpdateMatchup(x));
+
+        }
+
+
+        private static void AdvanceWinners(List<MatchupModel> models, TournamentModel tournament)
+        {
+            foreach (MatchupModel m in models)
+            {
+                foreach (List<MatchupModel> round in tournament.Rounds)
+                {
+                    foreach (MatchupModel roundMatchup in round)
+                    {
+                        foreach (MatchupEntryModel me in roundMatchup.Entries)
+                        {
+                            if (me.ParentMatchup != null)
+                            {
+                                if (me.ParentMatchup.Id == m.Id)
+                                {
+                                    me.TeamCompeting = m.Winner;
+                                    GlobalConfig.Connection.UpdateMatchup(roundMatchup);
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private static void MarkWinnerInMatchups(List<MatchupModel> models)
+        {
+            // Greater or Lesser
+            string greaterWins = ConfigurationManager.AppSettings["greaterWins"];
+
+            foreach (MatchupModel m in models)
+            {
+                // Checking for Bye Week Entry
+                if (m.Entries.Count == 1)
+                {
+                    m.Winner = m.Entries[0].TeamCompeting;
+                    continue;
+                }
+                // 0 means false or low score wins, we're playing Golf
+                if (greaterWins == "0")
+                {
+                    if (m.Entries[0].Score < m.Entries[1].Score)
+                    {
+                        m.Winner = m.Entries[0].TeamCompeting;
+                    }
+                    else if (m.Entries[1].Score < m.Entries[0].Score)
+                    {
+                        m.Winner = m.Entries[1].TeamCompeting;
+                    }
+                    else
+                    {
+                        throw new Exception("We do not allow ties in this application.");
+                    }
+                }
+                else
+                {
+                    // true or high score wins like a normal game
+                    // Normal sports game
+                    if (m.Entries[0].Score > m.Entries[1].Score)
+                    {
+                        m.Winner = m.Entries[0].TeamCompeting;
+                    }
+                    else if (m.Entries[1].Score > m.Entries[0].Score)
+                    {
+                        m.Winner = m.Entries[1].TeamCompeting;
+                    }
+                    else
+                    {
+                        throw new Exception("We do not allow ties in this application");
+                    }
+
+                } 
+            }
         }
 
         // 4. Create every round after the 1st round. We're dividing by 2 now. 8/2 = 4, 4/2 = 2
@@ -146,8 +249,6 @@ namespace TrackerLibrary
 
             return rounds;
         }
-
-        // 1. To create an initial Round, randomize all teams
         private static List<TeamModel> randomizeTeamOrder(List<TeamModel> teams)
         {
             return teams.OrderBy(x => Guid.NewGuid()).ToList();

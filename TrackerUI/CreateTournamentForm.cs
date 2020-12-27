@@ -147,6 +147,9 @@ namespace TrackerUI
             // Next we need to save the tournament model or data to a SQL database!
             GlobalConfig.Connection.CreateTournament(tm);
 
+            TournamentViewerForm frm = new TournamentViewerForm(tm);
+            frm.Show();
+            this.Close();
 
         }
     }
