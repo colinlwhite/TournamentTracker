@@ -52,5 +52,10 @@ namespace TrackerLibrary
             // up the name we gave it. It's going to return the ConnectionString attribute vALUE
             return ConfigurationManager.ConnectionStrings[name].ConnectionString;
         }
+
+        public static string AppKeyLookup(string key)
+        {
+            return ConfigurationManager.AppSettings[key];
+        }
     }
 }
