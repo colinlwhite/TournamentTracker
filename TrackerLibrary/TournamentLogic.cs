@@ -69,8 +69,6 @@ namespace TrackerLibrary
 
             if (endingRound > startingRound)
             {
-                // Email Users
-                // EmailLogic.SendEmail();
                 model.AlertUsersToNewRound();
             }
 
