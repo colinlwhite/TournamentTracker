@@ -342,3 +342,5 @@ healthchecksdb
 .vs/
 bin
 obj
+App.config
+TrackerUI/App.config
