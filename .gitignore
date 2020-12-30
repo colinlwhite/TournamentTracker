@@ -342,3 +342,4 @@ healthchecksdb
 .vs/
 bin
 obj
+App.config
