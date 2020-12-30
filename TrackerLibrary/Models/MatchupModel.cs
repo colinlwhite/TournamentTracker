@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TrackerLibrary.Models
 {
     /// <summary>
-    /// Represents one match in the tournament.
+    /// Represents one match or game in the tournament.
     /// </summary>
     public class MatchupModel
     {
