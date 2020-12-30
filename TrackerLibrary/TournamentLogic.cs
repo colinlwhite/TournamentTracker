@@ -75,7 +75,7 @@ namespace TrackerLibrary
             }
 
         }
-        private static void AlertUsersToNewRound(this TournamentModel model)
+        public static void AlertUsersToNewRound(this TournamentModel model)
         {
             int currentRoundNumber = model.CheckCurrentRound();
 
