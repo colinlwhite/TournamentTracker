@@ -71,7 +71,7 @@ namespace TrackerLibrary
             {
                 // Email Users
                 // EmailLogic.SendEmail();
-                AlertUsersToNewRound(model);
+                model.AlertUsersToNewRound();
             }
 
         }
