@@ -39,8 +39,11 @@ namespace TrackerLibrary.Models
         /// The matchups per round.
         /// </summary>
         public List<List<MatchupModel>> Rounds { get; set; } = new List<List<MatchupModel>>();
-
-        public void ComopleteTourament()
+        /// <summary>
+        /// Fires off the event above - invokes the event
+        /// '?' If you have a subscriber, fire the event
+        /// </summary>
+        public void CompleteTourament()
         {
             OnTournamentComplete?.Invoke(this, DateTime.Now);
         }
