@@ -214,7 +214,7 @@ namespace TrackerLibrary
                 }
             }
 
-            EmailLogic.SendEmail(to, subject, body.ToString());
+            EmailLogic.SendEmail(new List<string>(), bcc, subject, body.ToString());
         }
 
         private static decimal CalculatePrizePayout(this PrizeModel prize, decimal totalIncome)
