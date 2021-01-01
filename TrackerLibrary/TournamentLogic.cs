@@ -95,37 +95,40 @@ namespace TrackerLibrary
         private static void AlertPlayerToNewRound(PersonModel player, string teamName, MatchupEntryModel competingTeam)
         {
 
-            if (player.EmailAddress.Length == 0)
+            if (player.EmailAddress.Length > 0)
             {
-                return;
+                string to = "";
+                string subject = "";
+                StringBuilder body = new StringBuilder();
+
+                if (competingTeam != null)
+                {
+                    subject = $"You have a new game with { competingTeam.TeamCompeting.TeamName }!";
+                    body.AppendLine("<h1>You have a new game ahead</h1>");
+                    body.Append("<strong>Competitor: </strong>");
+                    body.Append(competingTeam.TeamCompeting.TeamName);
+                    body.AppendLine();
+                    body.AppendLine();
+                    body.AppendLine("Best of luck!");
+                    body.AppendLine("~ Tournament Tracker");
+
+                }
+                else
+                {
+                    subject = "You have a bye week this round";
+                    body.AppendLine("Rest up this week and prepare!");
+                    body.AppendLine("~ Tournament Tracker");
+                }
+
+                to = player.EmailAddress;
+
+                EmailLogic.SendEmail(to, subject, body.ToString());
             }
 
-            string to = "";
-            string subject = "";
-            StringBuilder body = new StringBuilder();
-
-            if (competingTeam != null)
+            if (player.CellPhoneNumber.Length > 0)
             {
-                subject = $"You have a new game with { competingTeam.TeamCompeting.TeamName }!";
-                body.AppendLine("<h1>You have a new game ahead</h1>");
-                body.Append("<strong>Competitor: </strong>");
-                body.Append(competingTeam.TeamCompeting.TeamName);
-                body.AppendLine();
-                body.AppendLine();
-                body.AppendLine("Best of luck!");
-                body.AppendLine("~ Tournament Tracker");
-
+                SMSLogic.SendSMSMessage(player.CellPhoneNumber, $"You have a new matchup with { competingTeam.TeamCompeting.TeamName }"); 
             }
-            else
-            {
-                subject = "You have a bye week this round";
-                body.AppendLine("Rest up this week and prepare!");
-                body.AppendLine("~ Tournament Tracker");
-            }
-
-            to = player.EmailAddress;
-
-            EmailLogic.SendEmail(to, subject, body.ToString());
         }
 
         private static int CheckCurrentRound(this TournamentModel model)
