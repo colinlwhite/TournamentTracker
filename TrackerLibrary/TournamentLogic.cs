@@ -127,7 +127,14 @@ namespace TrackerLibrary
 
             if (player.CellPhoneNumber.Length > 0)
             {
-                SMSLogic.SendSMSMessage(player.CellPhoneNumber, $"You have a new matchup with { competingTeam.TeamCompeting.TeamName }"); 
+                if (competingTeam != null)
+                {
+                    SMSLogic.SendSMSMessage(player.CellPhoneNumber, $"You have a new matchup with { competingTeam.TeamCompeting.TeamName }");  
+                }
+                else
+                {
+                    SMSLogic.SendSMSMessage(player.CellPhoneNumber, "You have a bye week this round");
+                }
             }
         }
 
