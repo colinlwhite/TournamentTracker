@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCUI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,27 +19,47 @@ namespace MVCUI.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            TournamentMVCModel input = new TournamentMVCModel();
+
+            List<TeamModel> allTeams = GlobalConfig.Connection.GetTeam_All();
+            List<PrizeModel> allPrizes = GlobalConfig.Connection.GetPrizes_All();
+
+            input.EnteredTeams = allTeams.Select(x => new SelectListItem { Text = x.TeamName, Value = x.Id.ToString() }).ToList();
+            input.Prizes = allPrizes.Select(x => new SelectListItem { Text = x.PlaceName, Value = x.Id.ToString() }).ToList();
+
+            return View(input);
         }
 
         // POST: People/Create
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(TournamentModel p)
+        public ActionResult Create(TournamentMVCModel model)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && model.SelectedEnteredTeams.Count > 0)
                 {
-                    // TODO - Create the Tournament
+                    TournamentModel t = new TournamentModel();
+                    t.TournamentName = model.TournamentName;
+                    t.EntryFee = model.EntryFee;
+                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => new TeamModel { Id = int.Parse(x) }).ToList();
+                    t.Prizes = model.SelectedPrizes.Select(x => new PrizeModel { Id = int.Parse(x) }).ToList();
 
-                    return RedirectToAction("Index");
+                    // Wire up the matchups
+                    TournamentLogic.CreateRounds(t);
+
+                    GlobalConfig.Connection.CreateTournament(t);
+
+                    t.AlertUsersToNewRound();
+
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return View();
+                    return RedirectToAction("Create");
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
