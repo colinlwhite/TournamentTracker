@@ -128,7 +128,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\TeamMVCModel.cs" />
-    <Compile Include="Models\TournamentMVCModel.cs" />
+    <Compile Include="Models\TournamentMVCCreateModel.cs" />
+    <Compile Include="Models\TournamentMVCDetailsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +271,7 @@
     <Content Include="Views\Prizes\Index.cshtml" />
     <Content Include="Views\Prizes\Create.cshtml" />
     <Content Include="Views\Tournaments\Create.cshtml" />
+    <Content Include="Views\Tournaments\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -17,9 +17,29 @@ namespace MVCUI.Controllers
             return RedirectToAction("Index","Home");
         }
 
+        public ActionResult Details(int? id)
+        {
+            List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
+
+            try
+            {
+                TournamentMVCDetailsModel input = new TournamentMVCDetailsModel();
+                TournamentModel t = tournaments.Where(x => x.Id == id).First();
+
+                input.TournamentName = t.TournamentName;
+
+                return View(input);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+        }
+
         public ActionResult Create()
         {
-            TournamentMVCModel input = new TournamentMVCModel();
+            TournamentMVCCreateModel input = new TournamentMVCCreateModel();
 
             List<TeamModel> allTeams = GlobalConfig.Connection.GetTeam_All();
             List<PrizeModel> allPrizes = GlobalConfig.Connection.GetPrizes_All();
@@ -33,7 +53,7 @@ namespace MVCUI.Controllers
         // POST: People/Create
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(TournamentMVCModel model)
+        public ActionResult Create(TournamentMVCCreateModel model)
         {
             try
             {
