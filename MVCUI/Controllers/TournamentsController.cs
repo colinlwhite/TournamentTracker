@@ -17,7 +17,7 @@ namespace MVCUI.Controllers
             return RedirectToAction("Index","Home");
         }
 
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id, int roundId = 0)
         {
             List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
 
@@ -45,12 +45,26 @@ namespace MVCUI.Controllers
                         {
                             status = RoundStatus.Active;
                             activeRound = true;
+                            if (roundId == 0)
+                            {
+                                // Setting the roundId to be the active round number
+                                roundId = i + 1;
+                            }
                         } 
                     }
 
                     // "i + 1" because our loop starts at 0, hence "int i = 0"
-                    input.Rounds.Add(new RoundMVCModel { RoundName = "Round +" + i + 1, Status = status });
+                    input.Rounds.Add(
+                        new RoundMVCModel 
+                        { 
+                            RoundName = "Round " + (i + 1), 
+                            Status = status, 
+                            RoundNumber = i + 1 
+                        });
                 }
+
+                // Converting a 1 based list to a 0 based list for lookup
+                input.Matchups = GetMatchups(orderedRounds[roundId - 1]);
 
                 return View(input);
             }
@@ -59,6 +73,37 @@ namespace MVCUI.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+        }
+
+        private List<MatchupMVCModel> GetMatchups(List<MatchupModel> roundMatchups)
+        {
+            List<MatchupMVCModel> output = new List<MatchupMVCModel>();
+
+            foreach (var game in roundMatchups)
+            {
+                int teamTwoId = 0;
+                string teamTwoName = "Bye";
+                double teamTwoScore = 0;
+
+                if (game.Entries.Count > 1)
+                {
+                    teamTwoId = game.Entries[1].Id;
+                    teamTwoName = game.Entries[1].TeamCompeting.TeamName;
+                    teamTwoScore = game.Entries[1].Score;
+                }
+
+                output.Add(new MatchupMVCModel { 
+                    MatchupId = game.Id,
+                    FirstTeamMatchupEntryId = game.Entries[0].Id,
+                    FirstTeamName = game.Entries[0].TeamCompeting.TeamName,
+                    FirstTeamScore = game.Entries[0].Score,
+                    SecondTeamMatchupEntryId = teamTwoId,
+                    SecondTeamName = teamTwoName,
+                    SecondTeamScore = teamTwoScore
+                });
+            }
+
+            return output;
         }
 
         public ActionResult Create()

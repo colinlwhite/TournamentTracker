@@ -8,6 +8,42 @@
 
 <div>
     <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <h2>@Html.DisplayNameFor(model => model.Rounds)</h2>
+            <ul class="list-unstyled rounds-display">
+                @foreach (var round in Model.Rounds)
+                {
+                <li>
+                    @Html.ActionLink(round.RoundName, "Details", "Tournaments", new { roundId = round.RoundNumber }, new { })
+                    &nbsp;
+                    @if (round.Status == RoundStatus.Complete)
+                    {
+                        <span class="label label-default">completed</span>
+                    }
+                    else if (round.Status == RoundStatus.Active)
+                    {
+                        <span class="label label-success">active</span>
+                    }
+                    else if (round.Status == RoundStatus.Locked)
+                    {
+                        <span class="label label-danger">locked</span>
+                    }
+                </li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <ul>
+                @foreach (var item in Model.Matchups)
+                {
+                    <li>
+                        @item.FirstTeamName vs @item.SecondTeamName
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
 <p>
     @Html.ActionLink("Back to List", "Index")
