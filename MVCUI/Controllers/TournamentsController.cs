@@ -28,9 +28,28 @@ namespace MVCUI.Controllers
 
                 input.TournamentName = t.TournamentName;
 
-                foreach (var round in t.Rounds)
+                var orderedRounds = t.Rounds.OrderBy(x => x.First().MatchupRound).ToList();
+                bool activeRound = false;
+
+                for (int i = 0; i < orderedRounds.Count; i++)
                 {
-                    input.Rounds.Add( new RoundMVCModel { RoundName = "Round +" + round.First().MatchupRound.ToString() });
+                    RoundStatus status = RoundStatus.Locked;
+
+                    if (!activeRound)
+                    {
+                        if (orderedRounds[i].TrueForAll(x => x.Winner != null))
+                        {
+                            status = RoundStatus.Complete;
+                        }
+                        else
+                        {
+                            status = RoundStatus.Active;
+                            activeRound = true;
+                        } 
+                    }
+
+                    // "i + 1" because our loop starts at 0, hence "int i = 0"
+                    input.Rounds.Add(new RoundMVCModel { RoundName = "Round +" + i + 1, Status = status });
                 }
 
                 return View(input);
