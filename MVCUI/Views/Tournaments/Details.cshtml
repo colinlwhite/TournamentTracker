@@ -14,34 +14,62 @@
             <ul class="list-unstyled rounds-display">
                 @foreach (var round in Model.Rounds)
                 {
-                <li>
-                    @Html.ActionLink(round.RoundName, "Details", "Tournaments", new { roundId = round.RoundNumber }, new { })
-                    &nbsp;
-                    @if (round.Status == RoundStatus.Complete)
-                    {
-                        <span class="label label-default">completed</span>
-                    }
-                    else if (round.Status == RoundStatus.Active)
-                    {
-                        <span class="label label-success">active</span>
-                    }
-                    else if (round.Status == RoundStatus.Locked)
-                    {
-                        <span class="label label-danger">locked</span>
-                    }
-                </li>
+                    <li>
+                        @Html.ActionLink(round.RoundName, "Details", "Tournaments", new { roundId = round.RoundNumber }, new { })
+                        &nbsp;
+                        @if (round.Status == RoundStatus.Complete)
+                        {
+                            <span class="label label-default">completed</span>
+                        }
+                        else if (round.Status == RoundStatus.Active)
+                        {
+                            <span class="label label-success">active</span>
+                        }
+                        else if (round.Status == RoundStatus.Locked)
+                        {
+                            <span class="label label-danger">locked</span>
+                        }
+                    </li>
                 }
             </ul>
         </div>
         <div class="col-md-9">
-            <ul>
+            <div class="row">
                 @foreach (var item in Model.Matchups)
                 {
-                    <li>
-                        @item.FirstTeamName vs @item.SecondTeamName
-                    </li>
+                    <div class="col-md-6">
+                        @using (Html.BeginForm())
+                        {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <label class="control-label">@item.FirstTeamName</label>
+                                <div class="">
+                                    @Html.EditorFor(model => item.FirstTeamScore, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.FirstTeamScore, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">@item.SecondTeamName</label>
+                                <div class="">
+                                    @Html.EditorFor(model => item.SecondTeamScore, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.SecondTeamScore, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Score Match" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
                 }
-            </ul>
+            </div>
         </div>
     </div>
 </div>
