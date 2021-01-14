@@ -14,7 +14,13 @@ namespace MVCUI.Controllers
         // GET: Tournaments
         public ActionResult Index()
         {
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult Details(MatchupMVCModel model)
+        {
+            return View();
         }
 
         public ActionResult Details(int id, int roundId = 0)
