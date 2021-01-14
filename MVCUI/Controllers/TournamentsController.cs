@@ -82,20 +82,37 @@ namespace MVCUI.Controllers
             foreach (var game in roundMatchups)
             {
                 int teamTwoId = 0;
+                string teamOneName = "";
                 string teamTwoName = "Bye";
                 double teamTwoScore = 0;
+
+                if (game.Entries[0].TeamCompeting == null)
+                {
+                    teamOneName = "To Be Determined";
+                }
+                else
+                {
+                    teamOneName = game.Entries[0].TeamCompeting.TeamName;
+                }
 
                 if (game.Entries.Count > 1)
                 {
                     teamTwoId = game.Entries[1].Id;
-                    teamTwoName = game.Entries[1].TeamCompeting.TeamName;
+                    if (game.Entries[1].TeamCompeting == null)
+                    {
+                        teamTwoName = "To Be Determined";
+                    }
+                    else
+                    {
+                        teamTwoName = game.Entries[1].TeamCompeting.TeamName;
+                    }
                     teamTwoScore = game.Entries[1].Score;
                 }
 
                 output.Add(new MatchupMVCModel { 
                     MatchupId = game.Id,
                     FirstTeamMatchupEntryId = game.Entries[0].Id,
-                    FirstTeamName = game.Entries[0].TeamCompeting.TeamName,
+                    FirstTeamName = teamOneName,
                     FirstTeamScore = game.Entries[0].Score,
                     SecondTeamMatchupEntryId = teamTwoId,
                     SecondTeamName = teamTwoName,
