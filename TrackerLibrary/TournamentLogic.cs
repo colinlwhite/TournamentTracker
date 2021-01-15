@@ -51,7 +51,7 @@ namespace TrackerLibrary
                 {   // If a game winner has been decided we don't need to worry about this
                     // If a game winner has not been decided and either
                     // A team has a score or there's only one team in the game
-                    if (rm.Winner == null && (rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
+                    if ((rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
                     {
                         // Add that team to a list of teams to be scored
                         toScore.Add(rm);

@@ -12,7 +12,6 @@
             <h1>Office Fun!</h1>
             <p class="lead">Track your in-office tournaments easily and have a great time doing it.</p>
             <p>@Html.ActionLink("Create a Tournament", "Create", "Tournaments", new { area="" }, new { @class = "btn btn-primary btn-lg" })</p>
-            @*<p><a href="https://asp.net" class="btn btn-primary btn-lg">Create a Tournament</a></p>*@
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -32,14 +31,8 @@
         <ul class="list-unstyled tourney-display">
             @foreach (var item in Model)
             {
-                <li><a href="/">@item.TournamentName</a></li>
-
+                <li>@Html.ActionLink(item.TournamentName, "Details", "Tournaments", new { id = item.Id }, new { })</li>
             }
-@*
-            <li><a href="/">Tournament One</a></li>
-            <li><a href="/">Tournament Two</a></li>
-            <li><a href="/">Tournament Three</a></li>
-            <li><a href="/">Tournament Four</a></li>*@
         </ul>
     </div>
 </div>

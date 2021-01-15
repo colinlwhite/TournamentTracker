@@ -14,10 +14,57 @@ namespace MVCUI.Controllers
         // GET: Tournaments
         public ActionResult Index()
         {
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Details(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken()]
+        public ActionResult EditTournamentMatchup(MatchupMVCModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
+                    TournamentModel t = tournaments.Where(x => x.Id == model.TournamentId).First();
+                    MatchupModel foundMatchup = new MatchupModel();
+
+                    foreach (var round in t.Rounds)
+                    {
+                        foreach (var matchup in round)
+                        {
+                            if (matchup.Id == model.MatchupId)
+                            {
+                                foundMatchup = matchup;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < foundMatchup.Entries.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            foundMatchup.Entries[i].Score = model.FirstTeamScore;
+                        }
+                        else if (i == 1)
+                        {
+                            foundMatchup.Entries[i].Score = model.SecondTeamScore;
+                        }
+                    }
+
+                    TournamentLogic.UpdateTournamentResults(t);
+
+                }
+            }
+            catch
+            {
+
+            }
+
+            return RedirectToAction("Details","Tournaments", new { id = model.TournamentId, roundId = model.RoundNumber });
+        }
+
+        public ActionResult Details(int id, int roundId = 0)
         {
             List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
 
@@ -28,6 +75,44 @@ namespace MVCUI.Controllers
 
                 input.TournamentName = t.TournamentName;
 
+                var orderedRounds = t.Rounds.OrderBy(x => x.First().MatchupRound).ToList();
+                bool activeRound = false;
+
+                for (int i = 0; i < orderedRounds.Count; i++)
+                {
+                    RoundStatus status = RoundStatus.Locked;
+
+                    if (!activeRound)
+                    {
+                        if (orderedRounds[i].TrueForAll(x => x.Winner != null))
+                        {
+                            status = RoundStatus.Complete;
+                        }
+                        else
+                        {
+                            status = RoundStatus.Active;
+                            activeRound = true;
+                            if (roundId == 0)
+                            {
+                                // Setting the roundId to be the active round number
+                                roundId = i + 1;
+                            }
+                        } 
+                    }
+
+                    // "i + 1" because our loop starts at 0, hence "int i = 0"
+                    input.Rounds.Add(
+                        new RoundMVCModel 
+                        { 
+                            RoundName = "Round " + (i + 1), 
+                            Status = status, 
+                            RoundNumber = i + 1 
+                        });
+                }
+
+                // Converting a 1 based list to a 0 based list for lookup
+                input.Matchups = GetMatchups(orderedRounds[roundId - 1], id, roundId);
+
                 return View(input);
             }
             catch (Exception)
@@ -35,6 +120,56 @@ namespace MVCUI.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+        }
+
+        private List<MatchupMVCModel> GetMatchups(List<MatchupModel> roundMatchups, int tournamentId, int roundId = 0)
+        {
+            List<MatchupMVCModel> output = new List<MatchupMVCModel>();
+
+            foreach (var game in roundMatchups)
+            {
+                int teamTwoId = 0;
+                string teamOneName = "";
+                string teamTwoName = "Bye";
+                double teamTwoScore = 0;
+
+                if (game.Entries[0].TeamCompeting == null)
+                {
+                    teamOneName = "To Be Determined";
+                }
+                else
+                {
+                    teamOneName = game.Entries[0].TeamCompeting.TeamName;
+                }
+
+                if (game.Entries.Count > 1)
+                {
+                    teamTwoId = game.Entries[1].Id;
+                    if (game.Entries[1].TeamCompeting == null)
+                    {
+                        teamTwoName = "To Be Determined";
+                    }
+                    else
+                    {
+                        teamTwoName = game.Entries[1].TeamCompeting.TeamName;
+                    }
+                    teamTwoScore = game.Entries[1].Score;
+                }
+
+                output.Add(new MatchupMVCModel { 
+                    MatchupId = game.Id,
+                    TournamentId = tournamentId,
+                    RoundNumber = roundId,
+                    FirstTeamMatchupEntryId = game.Entries[0].Id,
+                    FirstTeamName = teamOneName,
+                    FirstTeamScore = game.Entries[0].Score,
+                    SecondTeamMatchupEntryId = teamTwoId,
+                    SecondTeamName = teamTwoName,
+                    SecondTeamScore = teamTwoScore
+                });
+            }
+
+            return output;
         }
 
         public ActionResult Create()
@@ -59,11 +194,16 @@ namespace MVCUI.Controllers
             {
                 if (ModelState.IsValid && model.SelectedEnteredTeams.Count > 0)
                 {
+                    List<PrizeModel> allPrizes = GlobalConfig.Connection.GetPrizes_All();
+                    List<TeamModel> allTeams = GlobalConfig.Connection.GetTeam_All();
+
                     TournamentModel t = new TournamentModel();
                     t.TournamentName = model.TournamentName;
                     t.EntryFee = model.EntryFee;
-                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => new TeamModel { Id = int.Parse(x) }).ToList();
-                    t.Prizes = model.SelectedPrizes.Select(x => new PrizeModel { Id = int.Parse(x) }).ToList();
+                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => allTeams.Where(y => y.Id == int.Parse(x)).First()).ToList();
+                    t.Prizes = model.SelectedPrizes.Select(x => allPrizes.Where(y => y.Id == int.Parse(x)).First()).ToList();
+/*                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => new TeamModel { Id = int.Parse(x) }).ToList();
+                    t.Prizes = model.SelectedPrizes.Select(x => new PrizeModel { Id = int.Parse(x) }).ToList();*/
 
                     // Wire up the matchups
                     TournamentLogic.CreateRounds(t);
