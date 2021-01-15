@@ -344,3 +344,4 @@ bin
 obj
 App.config
 TrackerUI/App.config
+MVCUI/Web.config
