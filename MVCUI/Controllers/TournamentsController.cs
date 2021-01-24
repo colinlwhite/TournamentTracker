@@ -202,8 +202,6 @@ namespace MVCUI.Controllers
                     t.EntryFee = model.EntryFee;
                     t.EnteredTeams = model.SelectedEnteredTeams.Select(x => allTeams.Where(y => y.Id == int.Parse(x)).First()).ToList();
                     t.Prizes = model.SelectedPrizes.Select(x => allPrizes.Where(y => y.Id == int.Parse(x)).First()).ToList();
-/*                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => new TeamModel { Id = int.Parse(x) }).ToList();
-                    t.Prizes = model.SelectedPrizes.Select(x => new PrizeModel { Id = int.Parse(x) }).ToList();*/
 
                     // Wire up the matchups
                     TournamentLogic.CreateRounds(t);
