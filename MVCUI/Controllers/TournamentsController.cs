@@ -217,7 +217,7 @@ namespace MVCUI.Controllers
                     return RedirectToAction("Create");
                 }
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return View();
             }
