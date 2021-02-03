@@ -25,5 +25,8 @@ Additionally, to simulate a real-world business application, the application has
 * Bootstrap
 * Bootswatch
 
+## Screenshots
+![Web Home Page](./MVCHomePage.PNG)
+
 ## Demo
 Coming soon
