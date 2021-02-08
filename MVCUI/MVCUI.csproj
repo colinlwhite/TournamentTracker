@@ -242,6 +242,7 @@
     <Content Include="Scripts\src\utils\setStyles.js" />
     <Content Include="Scripts\src\utils\setupEventListeners.js" />
     <Content Include="Scripts\Tournaments\TournamentDetails.js" />
+    <Content Include="Scripts\Tournaments\_EditMatchup.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
