@@ -1,3 +1,3 @@
 ﻿function scoreButtonClick() {
-    alert("We've scored a matchup");
+    alert("JavaScript is in the project");
 }
