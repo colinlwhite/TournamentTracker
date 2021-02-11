@@ -1,5 +1,7 @@
 ﻿@model MVCUI.Models.MatchupMVCModel
 
+<script src="~/Scripts/Tournaments/_EditMatchup.js" type="text/javascript"></script>
+
 @using (Html.BeginForm("EditTournamentMatchup", "Tournaments"))
 {
     @Html.AntiForgeryToken()
@@ -9,7 +11,6 @@
     @Html.HiddenFor(Model => Model.SecondTeamMatchupEntryId)
     @Html.HiddenFor(Model => Model.TournamentId)
     @Html.HiddenFor(Model => Model.RoundNumber)
-
 
 
     <div class="form-horizontal">
@@ -32,7 +33,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Score Match" class="btn btn-default" />
+                <input type="submit" value="Score Match" class="btn btn-default" onclick="scoreButtonClick()" />
             </div>
         </div>
     </div>
